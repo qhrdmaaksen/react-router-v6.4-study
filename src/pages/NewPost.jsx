@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {redirect, useNavigate} from "react-router-dom";
+import { redirect, useActionData, useNavigate } from "react-router-dom";
 
 import NewPostForm from "../components/NewPostForm";
 import { savePost } from "../util/api";
@@ -8,6 +8,12 @@ function NewPostPage() {
   /*const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState();*/
   const navigate = useNavigate();
+
+  /*같은 페이지에 머물 때 반환된 데이터에 액세스하기 위해서는 useActionData 훅을 사용합니다
+    React Router가 제공하는 이 훅을 사용하면 오류 데이터 등 액션이 반환하는 어떤 종류의 데이터든
+    UI에서 사용할 수 있어요 데이터가 설정됐는지 확인하고 설정된 데이터가 오류 상태인지 확인하면
+    오류가 일어났는지 알 수 있겠죠*/
+  const data = useActionData();
 
   /*async function submitHandler(event) {
     event.preventDefault();
@@ -32,6 +38,7 @@ function NewPostPage() {
 
   return (
     <>
+      {data && data.status && <p>{data.message}</p>}
       {/*error && <p>{error.message}</p>}*/}
       <NewPostForm onCancel={cancelHandler} submitting={false} />
       {/*<NewPostForm
@@ -70,12 +77,12 @@ get 메서드는 formData 객체가 지원하는 메서드로 formData 객체는
   try {
     await savePost(post);
   } catch (error) {
-    if(error.status === 422){
-  /*throw 대신 return을 하면 같은 페이지에 머물면서 리디렉션 되지 않고 오류 페이지를 로딩하지 않겠죠*/
+    if (error.status === 422) {
+      /*throw 대신 return을 하면 같은 페이지에 머물면서 리디렉션 되지 않고 오류 페이지를 로딩하지 않겠죠*/
       return error;
     }
     throw error;
   }
   //redirect 메서드를 호출하면 다른 페이지로 이동하도록 브라우저를 트리거하는 응답을 생성하죠
-  return redirect('/blog')
+  return redirect("/blog");
 };
