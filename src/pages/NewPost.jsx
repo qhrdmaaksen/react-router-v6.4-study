@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { redirect, useActionData, useNavigate } from "react-router-dom";
+import {redirect, useActionData, useNavigate, useNavigation} from "react-router-dom";
 
 import NewPostForm from "../components/NewPostForm";
 import { savePost } from "../util/api";
@@ -13,7 +13,9 @@ function NewPostPage() {
     React Router가 제공하는 이 훅을 사용하면 오류 데이터 등 액션이 반환하는 어떤 종류의 데이터든
     UI에서 사용할 수 있어요 데이터가 설정됐는지 확인하고 설정된 데이터가 오류 상태인지 확인하면
     오류가 일어났는지 알 수 있겠죠*/
-  const data = useActionData();
+  const errors = useActionData();
+
+  const navigation = useNavigation()
 
   /*async function submitHandler(event) {
     event.preventDefault();
@@ -38,9 +40,12 @@ function NewPostPage() {
 
   return (
     <>
-      {data && data.status && <p>{data.message}</p>}
+      {/*error 가 존재하며 errors.status 가 있다면 throw 로 설정한 message 출력*/}
+      {errors ?.status && <p>{errors.message}</p>}
+
       {/*error && <p>{error.message}</p>}*/}
-      <NewPostForm onCancel={cancelHandler} submitting={false} />
+
+      <NewPostForm onCancel={cancelHandler} submitting={navigation.state === 'submitting'} />
       {/*<NewPostForm
         onCancel={cancelHandler}
         onSubmit={submitHandler}
