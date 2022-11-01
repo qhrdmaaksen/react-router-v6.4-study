@@ -9,19 +9,18 @@ import {
 
 import BlogLayout from "./pages/BlogLayout";
 import BlogPostsPage, { loader as blogPostsLoader } from "./pages/BlogPosts";
-import NewPostPage from "./pages/NewPost";
+import NewPostPage, { action as newPostAction } from "./pages/NewPost";
 import PostDetailPage, { loader as blogPostLoader } from "./pages/PostDetail";
 import RootLayout from "./pages/RootLayout.jsx";
 import WelcomePage from "./pages/Welcome";
-import Error from './pages/Error.jsx';
+import Error from "./pages/Error.jsx";
 
 function App() {
   /*js route 정의 몇가지 사용하기위해 배열 전달
    * jsx 에 라우트 정의한것처럼 createBrowserRouter 함수에 또 다른 함수를 전달할수있음 createRoutesFromElements
    * 이런 식으로 라우트를 설정할 때는 Routes 컴포넌트 대신 단수형인 Route 를 입력해야 해요
    * 다른 라우트들을 자식 라우트로 가지는 하나의 부모 라우트
-   * 여기서 장점은 이제 부모 라우트가 다른 라우트를 포함한 레이아웃을 렌더링한다는 겁니다 이 경우 RootLayout 이죠
-   */
+   * 여기서 장점은 이제 부모 라우트가 다른 라우트를 포함한 레이아웃을 렌더링한다는 겁니다 이 경우 RootLayout 이죠*/
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,7 +35,13 @@ function App() {
             loader={blogPostLoader}
           />
         </Route>
-        <Route path="/blog/new" element={<NewPostPage />} />
+        {/*newPostAction이라는 별칭을 붙이겠습니다 이걸 action 프로퍼티에 값으로 지정하면
+          양식이 제출될 때마다 action 함수가 실행될 겁니다 action을 추가한 라우트에 도달할 테니까요*/}
+        <Route
+          path="/blog/new"
+          element={<NewPostPage />}
+          action={newPostAction}
+        />
       </Route>
     )
   );
